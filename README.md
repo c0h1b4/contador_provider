@@ -1,6 +1,6 @@
-# novo_teste
+# contador_provider
 
-A new Flutter project.
+Implementação do pacote provider no app inicial do Flutter.
 
 ## Getting Started
 
