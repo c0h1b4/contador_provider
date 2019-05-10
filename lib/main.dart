@@ -27,9 +27,6 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final contador = Provider.of<Contador>(context);
-    void _incrementCounter() {
-      contador.stateContador++;
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +51,7 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: contador.incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),

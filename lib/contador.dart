@@ -8,4 +8,9 @@ class Contador with ChangeNotifier {
     _stateContador = novoValor;
     notifyListeners();
   }
+
+  void incrementCounter() {
+    _stateContador++;
+    notifyListeners();
+  }
 }
