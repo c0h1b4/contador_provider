@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:novo_teste/contador.dart';
+import 'package:novo_teste/colorDecider.dart';
+import 'package:novo_teste/weatherInfo.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -7,53 +8,109 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (context) => Contador(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
       ),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   Widget build(BuildContext context) {
-    final contador = Provider.of<Contador>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
+    print("construiu o scaffold");
+    return ChangeNotifierProvider(
+      builder: (context) => WeatherInfo(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Provider pattern"),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              MySpecialText(),
+              MySpecialContent(),
+              MySpecialHeading(),
+            ],
+          ),
+        ),
+        floatingActionButton: MyFloatActionButton(),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Consumer<Contador>(
-              builder: (BuildContext context, Contador contador, _) {
-                return Text(
-                  '${contador.stateContador}',
-                  style: Theme.of(context).textTheme.display1,
-                );
-              },
-            )
-          ],
+    );
+  }
+}
+
+class MySpecialText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    print("construiu specialtext");
+
+    return Text(
+      "A temperatura agora é:",
+      style: TextStyle(
+        fontSize: 22.0,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+class MySpecialHeading extends StatelessWidget with ColorDecider {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Consumer<WeatherInfo>(builder: (context, weatherInfo, _) {
+        print("construiu heading");
+        return Text(
+          weatherInfo.temperatureType,
+          style: TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.bold,
+            color: decideColor(weatherInfo),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class MySpecialContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    print("construiu content");
+    WeatherInfo weatherInfo = Provider.of<WeatherInfo>(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        weatherInfo.temperatureVal.toString(),
+        style: TextStyle(
+          fontSize: 44.0,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: contador.incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+    );
+  }
+}
+
+class MyFloatActionButton extends StatelessWidget with ColorDecider {
+  @override
+  Widget build(BuildContext context) {
+    print("construiu button");
+    WeatherInfo weatherInfo = Provider.of<WeatherInfo>(context);
+    return FloatingActionButton(
+      backgroundColor: decideColor(weatherInfo),
+      onPressed: () {
+        String newWeatherType =
+            weatherInfo.temperatureType == "celsius" ? "fahrenheit" : "celsius";
+        weatherInfo.type = newWeatherType;
+      },
+      tooltip: 'Change Type',
+      child: Icon(
+        Icons.change_history,
       ),
     );
   }
