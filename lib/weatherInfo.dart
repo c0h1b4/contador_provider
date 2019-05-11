@@ -17,6 +17,7 @@ class WeatherInfo with ChangeNotifier {
 
   set type(String newType) {
     _tempType = newType;
+    _temperatureVal = (newType == "celsius") ? 25 : 78;
     notifyListeners();
   }
 }
